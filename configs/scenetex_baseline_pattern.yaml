@@ -1,0 +1,21 @@
+output_dir: {output_dir}
+dataset:
+  name: scenetex
+  dist: {radius}
+  center: {camera_center}
+  prompt: {prompt}
+  mesh_file: {mesh_file}
+  image_size: 512
+
+train:
+  lr: 0.0002
+
+model:
+  model_id: stabilityai/stable-diffusion-2-depth
+  depth_config: configs/depth_preprocessor_config.json
+  guidance_scale: 9.
+  diff_timestep: 50
+  model_type: depth
+  overlap_filter: 0.3
+  unet_train: False
+    
