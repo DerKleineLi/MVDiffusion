@@ -3,7 +3,7 @@ dataset:
   name: scenetex
   dist: {radius}
   center: {camera_center}
-  prompt: {prompt}
+  prompt: "{prompt}"
   mesh_file: {mesh_file}
   image_size: 512
 

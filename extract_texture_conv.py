@@ -1,43 +1,41 @@
 import math
+from argparse import ArgumentParser
 from pathlib import Path
 
 import cv2
 import numpy as np
-from scipy import signal
 
-scene_name = "LivingRoom-36282"
-short_prompt = "classic"  # used for output_dir
-kernel_size = 11
-sigma = 1
+# scene_name = "0b16abb1-4a59-4ce3-85b5-8ec10440d9dd"
+# short_prompt = "classic"  # used for output_dir
+# kernel_size = 11
+# sigma = 1
 
 
-def gkern(kernlen=21, std=3):
-    """Returns a 2D Gaussian kernel array."""
-    gkern1d = signal.gaussian(kernlen, std=std).reshape(kernlen, 1)
-    gkern2d = np.outer(gkern1d, gkern1d)
-    return gkern2d
+def parse_args():
+    arg_parser = ArgumentParser()
+    arg_parser.add_argument(
+        "--scene_name", type=str, default="0b16abb1-4a59-4ce3-85b5-8ec10440d9dd"
+    )
+    arg_parser.add_argument("--short_prompt", type=str, default="classic")
+    arg_parser.add_argument("--kernel_size", type=int, default=11)
+    arg_parser.add_argument("--sigma", type=float, default=1)
+    args = arg_parser.parse_args()
+    return args
 
 
 if __name__ == "__main__":
-    output_dir = Path("outputs") / scene_name / short_prompt / "images"
+    args = parse_args()
+    scene_name = args.scene_name
+    short_prompt = args.short_prompt
+    kernel_size = args.kernel_size
+    sigma = args.sigma
+
+    output_dir = Path("outputs") / "mvdiffusion" / scene_name / short_prompt / "images"
 
     pred_files = sorted(output_dir.glob("*_pred.png"))
 
     result_sum = np.zeros((4096, 4096, 3), dtype=np.float64)
     result_count = np.zeros((4096, 4096, 1), dtype=np.float64)
-    # gaussian_kernel = (
-    #     np.array(
-    #         [
-    #             [1, 4, 7, 4, 1],
-    #             [4, 16, 26, 16, 4],
-    #             [7, 26, 41, 26, 7],
-    #             [4, 16, 26, 16, 4],
-    #             [1, 4, 7, 4, 1],
-    #         ]
-    #     )
-    #     / 273
-    # )
-    # gaussian_kernel = gaussian_kernel.reshape(5, 5, 1)
     kernel = np.fromfunction(
         lambda x, y: (1 / (2 * math.pi * sigma**2))
         * math.e
@@ -78,4 +76,8 @@ if __name__ == "__main__":
 
     result = result_sum / (result_count + 1e-8)
     result = result.astype(np.uint8)
-    cv2.imwrite(str(output_dir.parent / "texture.png"), result)
+    texture_file = (
+        Path("outputs") / "mvdiffusion" / f"mvdiffusion_{scene_name}_{short_prompt}.png"
+    )
+    cv2.imwrite(str(texture_file), result)
+    print("texture written to ", texture_file)

@@ -35,3 +35,7 @@ CUDA_VISIBLE_DEVICES='0' python -u ./test.py {config_file} \
     --batch_size=${batch_size} --num_workers=${torch_num_workers} \
     --mode test \
     --ckpt_path weights/depth_gen.ckpt
+
+python extract_texture_conv.py \
+    --scene_name {scene_name} \
+    --short_prompt {short_prompt}
