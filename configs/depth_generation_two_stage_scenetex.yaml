@@ -1,12 +1,12 @@
+output_dir: outputs/LivingRoom-36282/classic
 dataset:
-  name: scannet
-  num_views: 12
-  image_dir: /cluster/angmar/hli/data/scannet/test
-  resolution_h: 192
-  resolution_w: 256
-  data_load_mode: two_stage
-  test_interval: -1
-  gen_data_ratio: 1.0
+  name: scenetex
+  dist: 2.5
+  center: [0.85963, 1.1377, -4.6706]
+  prompt: "a classic style living room"
+  mesh_file: /rhome/hli/workspace/Text2Tex/data/LivingRoom-36282/scene.obj
+  image_size: 512
+
 train:
   lr: 0.0002
 
